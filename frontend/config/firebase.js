@@ -1,4 +1,6 @@
 import { initializeApp } from "firebase/app"
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth"
+import { collection, getFirestore } from "firebase/firestore"
 
 const firebaseConfig = {
   apiKey: "AIzaSyDWIlwqq7Pt8_UWTa1zZ7vQE6_MGYshMcA",
@@ -10,3 +12,19 @@ const firebaseConfig = {
 }
 
 const app = initializeApp(firebaseConfig)
+
+// Google Authentication
+const auth = getAuth(app)
+const provider = new GoogleAuthProvider()
+export function startGoogleLogin() {
+  let userData = signInWithPopup(auth, provider)
+    .then((res) => res)
+    .catch((err) => console.error(err))
+  return userData
+}
+
+// FireStore
+const firestoreDB = getFirestore(app)
+export function getFirestoreTable(tableName) {
+  return collection(firestoreDB, tableName)
+}
