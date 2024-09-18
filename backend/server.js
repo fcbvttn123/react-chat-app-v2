@@ -12,5 +12,3 @@ app.use("/api/auth", authRoutes)
 app.listen(process.env.PORT, () => {
   console.log(`Listening for request on port ${process.env.PORT}`)
 })
-
-// Git Test
