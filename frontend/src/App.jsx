@@ -1,15 +1,21 @@
 import { startGoogleLogin } from "./config/firebase"
-import { getUsernameFromEmail } from "./utils/utils"
+import { docExists, getUsernameFromEmail } from "./utils/utils"
 
 function App() {
   async function handleGoogleLogin() {
     try {
       let { user } = await startGoogleLogin()
-      let email = user.email
-      let displayName = user.displayName
-      let photoURL = user.photoURL
+      let { email, displayName, photoURL } = user
       let username = getUsernameFromEmail(email)
-      console.log(user)
+      let usernameExists = await docExists(
+        import.meta.env.VITE_USER_TABLE,
+        username
+      )
+      if (usernameExists) {
+        console.log("Do stuff")
+      } else {
+        console.log("Add username")
+      }
     } catch (err) {
       console.log(err)
     }

@@ -8,3 +8,17 @@ export function getUsernameFromEmail(email) {
   }
   return null // Return null if the input is not a valid email
 }
+
+export async function docExists(tableName, docId) {
+  try {
+    const docRef = doc(db, tableName, docId)
+    const docSnap = await getDoc(docRef)
+    if (docSnap.exists) {
+      return docSnap.data()
+    } else {
+      return null
+    }
+  } catch (err) {
+    console.error(err)
+  }
+}
