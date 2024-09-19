@@ -24,7 +24,7 @@ export function startGoogleLogin() {
 }
 
 // FireStore
-const firestoreDB = getFirestore(app)
-export function getFirestoreTable(tableName) {
-  return collection(firestoreDB, tableName)
+export const db = getFirestore(app)
+export function getFirestoreCollection(tableName) {
+  return collection(db, tableName)
 }

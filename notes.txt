@@ -1,3 +1,8 @@
 Continue:
     use token, received from server, on the client side 
     to authenticate the user with Stream and enable real-time chat features
+
+Current Commit 
+    + Restructure files
+
+    + Working on getting user data from google login
