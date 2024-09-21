@@ -16,9 +16,20 @@ function App() {
       )
       // If username already exists,
       if (usernameExists) {
-        console.log("Do stuff")
-        // If username is not in the db, add username and upsert it to Stream in backend
+        const res = await fetch(
+          `${import.meta.env.VITE_BASE_URL}/api/auth/login`,
+          {
+            method: "POST",
+            body: JSON.stringify({
+              username,
+              firstTimeLogIn: false,
+            }),
+          }
+        )
+        const json = await res.json()
+        console.log(json)
       } else {
+        // If username is not in the db, add username and upsert it to Stream in backend
         await createDoc(import.meta.env.VITE_USER_TABLE, username, { username })
         const res = await fetch(
           `${import.meta.env.VITE_BASE_URL}/api/auth/login`,
@@ -30,7 +41,8 @@ function App() {
             }),
           }
         )
-        await res.json()
+        const json = await res.json()
+        console.log(json)
       }
     } catch (err) {
       console.log(err)
