@@ -1,4 +1,4 @@
-import { doc, getDoc } from "firebase/firestore"
+import { doc, getDoc, setDoc } from "firebase/firestore"
 import { db } from "../config/firebase"
 
 export function getUsernameFromEmail(email) {
@@ -21,4 +21,8 @@ export async function docExists(tableName, docId) {
   } catch (err) {
     console.error(err)
   }
+}
+
+export async function createDoc(tableName, docId, dataObj) {
+  await setDoc(doc(db, tableName, docId), dataObj)
 }
