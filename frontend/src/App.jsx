@@ -24,6 +24,9 @@ function App() {
               username,
               firstTimeLogIn: false,
             }),
+            headers: {
+              "Content-Type": "application/json",
+            },
           }
         )
         const json = await res.json()
@@ -39,6 +42,9 @@ function App() {
               username,
               firstTimeLogIn: true,
             }),
+            headers: {
+              "Content-Type": "application/json",
+            },
           }
         )
         const json = await res.json()

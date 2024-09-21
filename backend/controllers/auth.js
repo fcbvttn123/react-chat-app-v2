@@ -16,7 +16,6 @@ async function postLogin(req, res) {
           name: username,
         },
       ])
-      console.log("User Upserted")
     }
     res.json({ username, token })
   } catch (err) {
