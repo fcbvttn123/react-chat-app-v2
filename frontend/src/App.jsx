@@ -1,5 +1,10 @@
 import { startGoogleLogin } from "./config/firebase"
-import { createDoc, docExists, getUsernameFromEmail } from "./utils/utils"
+import {
+  createDoc,
+  docExists,
+  getUsernameFromEmail,
+  postAPICall,
+} from "./utils/utils"
 
 function App() {
   async function handleGoogleLogin() {
@@ -16,38 +21,19 @@ function App() {
       )
       // If username already exists,
       if (usernameExists) {
-        const res = await fetch(
-          `${import.meta.env.VITE_BASE_URL}/api/auth/login`,
-          {
-            method: "POST",
-            body: JSON.stringify({
-              username,
-              firstTimeLogIn: false,
-            }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        const json = await res.json()
+        let json = await postAPICall("/api/auth/login", {
+          username,
+          firstTimeLogIn: false,
+        })
         console.log(json)
-      } else {
-        // If username is not in the db, add username and upsert it to Stream in backend
+      }
+      // else, add username to firestore and upsert it to Stream in backend
+      else {
         await createDoc(import.meta.env.VITE_USER_TABLE, username, { username })
-        const res = await fetch(
-          `${import.meta.env.VITE_BASE_URL}/api/auth/login`,
-          {
-            method: "POST",
-            body: JSON.stringify({
-              username,
-              firstTimeLogIn: true,
-            }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        const json = await res.json()
+        let json = await postAPICall("/api/auth/login", {
+          username,
+          firstTimeLogIn: true,
+        })
         console.log(json)
       }
     } catch (err) {

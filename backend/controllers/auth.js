@@ -16,6 +16,9 @@ async function postLogin(req, res) {
           name: username,
         },
       ])
+      console.log("User Upserted")
+    } else {
+      console.log("User already existed")
     }
     res.json({ username, token })
   } catch (err) {

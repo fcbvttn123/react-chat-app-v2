@@ -1,3 +1,3 @@
 Continue:
-    + Add username into table if it's not there
-    + Upsert username in the backend if the username is not there
+    + Connect user to Stream in the Frontend 
+    + Create or join channels 

@@ -26,3 +26,15 @@ export async function docExists(tableName, docId) {
 export async function createDoc(tableName, docId, dataObj) {
   await setDoc(doc(db, tableName, docId), dataObj)
 }
+
+export async function postAPICall(path, jsonData) {
+  const res = await fetch(import.meta.env.VITE_BASE_URL + path, {
+    method: "POST",
+    body: JSON.stringify(jsonData),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+  const json = await res.json()
+  return json
+}
