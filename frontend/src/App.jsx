@@ -1,4 +1,5 @@
 import { startGoogleLogin } from "./config/firebase"
+import { StreamChat } from "stream-chat"
 import {
   createDoc,
   docExists,
@@ -12,6 +13,17 @@ function App() {
       <button onClick={handleGoogleLogin}>Google Login</button>
     </div>
   )
+}
+
+async function connectUserToStream(token, userData) {
+  try {
+    const client = new StreamChat(import.meta.env.VITE_STREAM_API_KEY)
+    await client.connectUser(userData, token)
+    console.log("User connected to Stream")
+    return true
+  } catch (err) {
+    console.error(err)
+  }
 }
 
 async function handleGoogleLogin() {
@@ -32,7 +44,6 @@ async function handleGoogleLogin() {
         username,
         firstTimeLogIn: false,
       })
-      console.log(json)
     }
     // else, add username to firestore and upsert it to Stream in backend
     else {
@@ -41,8 +52,12 @@ async function handleGoogleLogin() {
         username,
         firstTimeLogIn: true,
       })
-      console.log(json)
     }
+    // Connect user to Stream
+    await connectUserToStream(json.token, {
+      id: json.id,
+      username: json.username,
+    })
   } catch (err) {
     console.log(err)
   }

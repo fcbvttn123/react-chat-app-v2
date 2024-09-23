@@ -17,7 +17,7 @@ async function postLogin(req, res) {
         },
       ])
     }
-    res.json({ username, token })
+    res.json({ id: username, username, token })
   } catch (err) {
     console.error(err)
   }
