@@ -7,7 +7,7 @@ import {
   postAPICall,
 } from "./utils/utils"
 import { useState } from "react"
-import { ChatComponent } from "./ChatComponent"
+import { ChatComponent } from "./chat/ChatComponent"
 
 function App() {
   const [data, setData] = useState(null)
