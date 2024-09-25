@@ -1,3 +1,2 @@
 Continue:
-    + Connect user to Stream in the Frontend 
-    + Create or join channels 
+    + Fetch channels for user after being connected to Stream

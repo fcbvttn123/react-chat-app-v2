@@ -15,15 +15,26 @@ function App() {
   )
 }
 
+const chatClient = new StreamChat(import.meta.env.VITE_STREAM_API_KEY)
+
 async function connectUserToStream(token, userData) {
   try {
-    const client = new StreamChat(import.meta.env.VITE_STREAM_API_KEY)
-    await client.connectUser(userData, token)
+    await chatClient.connectUser(userData, token)
     console.log("User connected to Stream")
     return true
   } catch (err) {
     console.error(err)
   }
+}
+
+async function queryChannels(username) {
+  const filter = { type: "messaging", members: { $in: [username] } }
+  const sort = [{ last_message_at: -1 }]
+  const channels = await chatClient.queryChannels(filter, sort, {
+    watch: true,
+    state: true,
+  })
+  return channels
 }
 
 async function handleGoogleLogin() {
@@ -39,8 +50,9 @@ async function handleGoogleLogin() {
       username
     )
     // If username is already in the firestore db,
+    let json
     if (usernameExists) {
-      let json = await postAPICall("/api/auth/login", {
+      json = await postAPICall("/api/auth/login", {
         username,
         firstTimeLogIn: false,
       })
@@ -48,16 +60,19 @@ async function handleGoogleLogin() {
     // else, add username to firestore and upsert it to Stream in backend
     else {
       await createDoc(import.meta.env.VITE_USER_TABLE, username, { username })
-      let json = await postAPICall("/api/auth/login", {
+      json = await postAPICall("/api/auth/login", {
         username,
         firstTimeLogIn: true,
       })
     }
     // Connect user to Stream
-    await connectUserToStream(json.token, {
+    let userConnectedToStream = await connectUserToStream(json.token, {
       id: json.id,
       username: json.username,
     })
+    // Query channels of the user
+    let channels = userConnectedToStream && (await queryChannels(json.username))
+    console.log(channels)
   } catch (err) {
     console.log(err)
   }
