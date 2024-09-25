@@ -7,9 +7,11 @@ import {
 } from "./utils/utils"
 import { useState } from "react"
 import { ChatComponent } from "./chat/ChatComponent"
+import { useAuthContext } from "./hooks/useAuthContext"
 
 function App() {
   const [userData, setUserData] = useState(null)
+  const { username, token } = useAuthContext()
   async function handleCLick() {
     let json = await handleGoogleLogin()
     setUserData(json)
