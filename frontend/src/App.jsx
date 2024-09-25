@@ -6,11 +6,19 @@ import {
   getUsernameFromEmail,
   postAPICall,
 } from "./utils/utils"
+import { useState } from "react"
+import { ChatComponent } from "./ChatComponent"
 
 function App() {
+  const [data, setData] = useState(null)
+  async function handleCLick() {
+    let json = await handleGoogleLogin()
+    setData(json)
+  }
   return (
     <div>
-      <button onClick={handleGoogleLogin}>Google Login</button>
+      <button onClick={handleCLick}>Google Login</button>
+      {data && <ChatComponent clientData={data} />}
     </div>
   )
 }
@@ -72,7 +80,11 @@ async function handleGoogleLogin() {
     })
     // Query channels of the user
     let channels = userConnectedToStream && (await queryChannels(json.username))
-    console.log(channels)
+    return {
+      apiKey: import.meta.env.VITE_STREAM_API_KEY,
+      tokenOrProvider: json.token,
+      userData: { id: json.id, username: json.username },
+    }
   } catch (err) {
     console.log(err)
   }
