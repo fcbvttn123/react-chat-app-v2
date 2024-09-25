@@ -1,5 +1,4 @@
 import { startGoogleLogin } from "./config/firebase"
-import { StreamChat } from "stream-chat"
 import {
   createDoc,
   docExists,
@@ -10,39 +9,17 @@ import { useState } from "react"
 import { ChatComponent } from "./chat/ChatComponent"
 
 function App() {
-  const [data, setData] = useState(null)
+  const [userData, setUserData] = useState(null)
   async function handleCLick() {
     let json = await handleGoogleLogin()
-    setData(json)
+    setUserData(json)
   }
   return (
     <div>
       <button onClick={handleCLick}>Google Login</button>
-      {data && <ChatComponent clientData={data} />}
+      {userData && <ChatComponent clientData={userData} />}
     </div>
   )
-}
-
-const chatClient = new StreamChat(import.meta.env.VITE_STREAM_API_KEY)
-
-async function connectUserToStream(token, userData) {
-  try {
-    await chatClient.connectUser(userData, token)
-    console.log("User connected to Stream")
-    return true
-  } catch (err) {
-    console.error(err)
-  }
-}
-
-async function queryChannels(username) {
-  const filter = { type: "messaging", members: { $in: [username] } }
-  const sort = [{ last_message_at: -1 }]
-  const channels = await chatClient.queryChannels(filter, sort, {
-    watch: true,
-    state: true,
-  })
-  return channels
 }
 
 async function handleGoogleLogin() {
@@ -73,13 +50,6 @@ async function handleGoogleLogin() {
         firstTimeLogIn: true,
       })
     }
-    // Connect user to Stream
-    let userConnectedToStream = await connectUserToStream(json.token, {
-      id: json.id,
-      username: json.username,
-    })
-    // Query channels of the user
-    let channels = userConnectedToStream && (await queryChannels(json.username))
     return {
       apiKey: import.meta.env.VITE_STREAM_API_KEY,
       tokenOrProvider: json.token,
