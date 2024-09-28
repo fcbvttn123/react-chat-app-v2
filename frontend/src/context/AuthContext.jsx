@@ -27,16 +27,6 @@ export function AuthContextProvider({ children }) {
     token: null,
   })
   useEffect(() => {
-    // async function verifyToken(token, userData) {
-    //   let validToken = await connectUserToStream(token, userData)
-    //   return validToken
-    // }
-    // let userData = JSON.parse(
-    //   localStorage.getItem(import.meta.env.VITE_STREAM_LOCAL_STORAGE_KEY_AUTH)
-    // )
-    // if (userData) {
-    //   verifyToken(userData.token, {userId: userData.userId, username: userData.username})
-    // }
     async function test() {
       let userData = JSON.parse(
         localStorage.getItem(import.meta.env.VITE_STREAM_LOCAL_STORAGE_KEY_AUTH)
