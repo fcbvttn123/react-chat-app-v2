@@ -1,15 +1,16 @@
 import { createContext, useReducer } from "react"
+import { AUTH_ACTION } from "./actions"
 
 export const AuthContext = createContext()
 
 function authReducer(state, action) {
   switch (action.type) {
-    case "LOGIN":
+    case AUTH_ACTION.LOGIN:
       return {
         username: action.payload.username,
         token: action.payload.token,
       }
-    case "LOGOUT":
+    case AUTH_ACTION.LOGOUT:
       return {
         username: null,
         token: null,

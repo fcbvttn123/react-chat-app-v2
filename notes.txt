@@ -1,3 +1,2 @@
 Continue:
-    + Clean code
-    + Save user data into global state after google login 
+    + Continue with Auth Context
