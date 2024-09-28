@@ -36,7 +36,19 @@ export function AuthContextProvider({ children }) {
           id: userData.userId,
           username: userData.username,
         })
-        tokenIsValid && dispatch({ type: AUTH_ACTION.LOGIN, payload: userData })
+        if (tokenIsValid) {
+          dispatch({ type: AUTH_ACTION.LOGIN, payload: userData })
+        } else {
+          localStorage.setItem(
+            import.meta.env.VITE_STREAM_LOCAL_STORAGE_KEY_AUTH,
+            JSON.stringify({
+              username: null,
+              token: null,
+              userId: null,
+            })
+          )
+          dispatch({ type: AUTH_ACTION.LOGOUT })
+        }
       }
     }
     test()

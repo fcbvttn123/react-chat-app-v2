@@ -46,6 +46,6 @@ export async function connectUserToStream(token, userData) {
     await client.connectUser(userData, token)
     return true
   } catch (err) {
-    console.error(err)
+    return false
   }
 }
