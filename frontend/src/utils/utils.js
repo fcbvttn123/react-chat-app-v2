@@ -1,5 +1,6 @@
 import { doc, getDoc, setDoc } from "firebase/firestore"
 import { db } from "../config/firebase"
+import { StreamChat } from "stream-chat"
 
 export function getUsernameFromEmail(email) {
   if (email && typeof email === "string") {
@@ -37,4 +38,14 @@ export async function postAPICall(path, jsonData) {
   })
   const json = await res.json()
   return json
+}
+
+export async function connectUserToStream(token, userData) {
+  try {
+    const client = new StreamChat(import.meta.env.VITE_STREAM_API_KEY)
+    await client.connectUser(userData, token)
+    return true
+  } catch (err) {
+    console.error(err)
+  }
 }

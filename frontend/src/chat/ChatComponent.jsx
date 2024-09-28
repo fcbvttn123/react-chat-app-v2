@@ -14,7 +14,7 @@ import "stream-chat-react/dist/css/v2/index.css"
 export function ChatComponent({ clientData }) {
   const client = useCreateChatClient(clientData)
   const filters = {
-    members: { $in: [clientData.userData.username] },
+    members: { $in: [clientData.userData.id] },
     type: "messaging",
   }
   const options = { presence: true, state: true }

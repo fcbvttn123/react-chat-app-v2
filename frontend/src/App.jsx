@@ -5,21 +5,46 @@ import {
   getUsernameFromEmail,
   postAPICall,
 } from "./utils/utils"
-import { useState } from "react"
 import { ChatComponent } from "./chat/ChatComponent"
 import { useAuthContext } from "./hooks/useAuthContext"
+import { AUTH_ACTION } from "./context/actions"
 
 function App() {
-  const [userData, setUserData] = useState(null)
-  const { username, token } = useAuthContext()
+  const { userId, username, token, dispatch } = useAuthContext()
   async function handleCLick() {
+    // Get json data from Google Login
     let json = await handleGoogleLogin()
-    setUserData(json)
+    // Save json data into localStorage
+    localStorage.setItem(
+      import.meta.env.VITE_STREAM_LOCAL_STORAGE_KEY_AUTH,
+      JSON.stringify({
+        userId: json.userId,
+        username: json.username,
+        token: json.token,
+      })
+    )
+    // Set user data to global state (auth)
+    dispatch({
+      type: AUTH_ACTION.LOGIN,
+      payload: {
+        username: json.username,
+        token: json.token,
+        userId: json.userId,
+      },
+    })
   }
   return (
     <div>
       <button onClick={handleCLick}>Google Login</button>
-      {userData && <ChatComponent clientData={userData} />}
+      {username && token && (
+        <ChatComponent
+          clientData={{
+            apiKey: import.meta.env.VITE_STREAM_API_KEY,
+            tokenOrProvider: token,
+            userData: { id: userId },
+          }}
+        />
+      )}
     </div>
   )
 }
@@ -53,9 +78,9 @@ async function handleGoogleLogin() {
       })
     }
     return {
-      apiKey: import.meta.env.VITE_STREAM_API_KEY,
-      tokenOrProvider: json.token,
-      userData: { id: json.id, username: json.username },
+      token: json.token,
+      userId: json.id,
+      username: json.username,
     }
   } catch (err) {
     console.log(err)
