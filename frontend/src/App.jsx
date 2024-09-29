@@ -9,9 +9,11 @@ import { ChatComponent } from "./chat/ChatComponent"
 import { useAuthContext } from "./hooks/useAuthContext"
 import { AUTH_ACTION } from "./context/actions"
 import { SearchBar } from "./components/SearchBar"
+import { useState } from "react"
 
 function App() {
   const { userId, username, token, dispatch } = useAuthContext()
+  const [searchResult, setSearchResult] = useState(null)
   async function handleLogin() {
     // Get json data from Google Login
     let json = await handleGoogleLogin()
@@ -43,8 +45,11 @@ function App() {
       <button onClick={handleLogout}>Logout</button>
       {username && (
         <div>
-          <p>Current username: {username}</p>{" "}
-          <SearchBar placeholder="Username..." />
+          <p>Current username: {username}</p>
+          <SearchBar
+            placeholder="Username..."
+            setSearchResult={setSearchResult}
+          />
         </div>
       )}
       {token && (

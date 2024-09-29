@@ -1,4 +1,5 @@
 import * as React from "react"
+import { useRef } from "react"
 import { styled, alpha } from "@mui/material/styles"
 import InputBase from "@mui/material/InputBase"
 import SearchIcon from "@mui/icons-material/Search"
@@ -45,16 +46,24 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }))
 
-export function SearchBar({ placeholder }) {
+export function SearchBar({ placeholder, setSearchResult }) {
+  const formComponent = useRef(null)
+  function handleFormSubmit(e) {
+    e.preventDefault()
+    setSearchResult(formComponent.current.querySelector("input").value)
+    formComponent.current.querySelector("input").value = ""
+  }
   return (
-    <Search>
-      <SearchIconWrapper>
-        <SearchIcon />
-      </SearchIconWrapper>
-      <StyledInputBase
-        placeholder={placeholder}
-        inputProps={{ "aria-label": "search" }}
-      />
-    </Search>
+    <form onSubmit={handleFormSubmit} ref={formComponent}>
+      <Search>
+        <SearchIconWrapper>
+          <SearchIcon />
+        </SearchIconWrapper>
+        <StyledInputBase
+          placeholder={placeholder}
+          inputProps={{ "aria-label": "search" }}
+        />
+      </Search>
+    </form>
   )
 }
