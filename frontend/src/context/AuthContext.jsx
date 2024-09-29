@@ -13,6 +13,14 @@ function authReducer(state, action) {
         userId: action.payload.userId,
       }
     case AUTH_ACTION.LOGOUT:
+      localStorage.setItem(
+        import.meta.env.VITE_STREAM_LOCAL_STORAGE_KEY_AUTH,
+        JSON.stringify({
+          username: null,
+          token: null,
+          userId: null,
+        })
+      )
       return {
         username: null,
         token: null,
@@ -27,7 +35,7 @@ export function AuthContextProvider({ children }) {
     token: null,
   })
   useEffect(() => {
-    async function test() {
+    async function fetchLocalStorageData() {
       let userData = JSON.parse(
         localStorage.getItem(import.meta.env.VITE_STREAM_LOCAL_STORAGE_KEY_AUTH)
       )
@@ -36,22 +44,12 @@ export function AuthContextProvider({ children }) {
           id: userData.userId,
           username: userData.username,
         })
-        if (tokenIsValid) {
-          dispatch({ type: AUTH_ACTION.LOGIN, payload: userData })
-        } else {
-          localStorage.setItem(
-            import.meta.env.VITE_STREAM_LOCAL_STORAGE_KEY_AUTH,
-            JSON.stringify({
-              username: null,
-              token: null,
-              userId: null,
-            })
-          )
-          dispatch({ type: AUTH_ACTION.LOGOUT })
-        }
+        tokenIsValid
+          ? dispatch({ type: AUTH_ACTION.LOGIN, payload: userData })
+          : dispatch({ type: AUTH_ACTION.LOGOUT })
       }
     }
-    test()
+    fetchLocalStorageData()
   }, [])
   return (
     <AuthContext.Provider value={{ ...state, dispatch }}>

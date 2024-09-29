@@ -11,7 +11,7 @@ import { AUTH_ACTION } from "./context/actions"
 
 function App() {
   const { userId, username, token, dispatch } = useAuthContext()
-  async function handleCLick() {
+  async function handleLogin() {
     // Get json data from Google Login
     let json = await handleGoogleLogin()
     // Save json data into localStorage
@@ -33,10 +33,15 @@ function App() {
       },
     })
   }
+  function handleLogout() {
+    dispatch({ type: AUTH_ACTION.LOGOUT })
+  }
   return (
     <div>
-      <button onClick={handleCLick}>Google Login</button>
-      {username && token && (
+      <button onClick={handleLogin}>Google Login</button>
+      <button onClick={handleLogout}>Logout</button>
+      {username && <p>Current username: {username}</p>}
+      {token && (
         <ChatComponent
           clientData={{
             apiKey: import.meta.env.VITE_STREAM_API_KEY,
