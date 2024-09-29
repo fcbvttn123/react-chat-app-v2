@@ -8,6 +8,7 @@ import {
 import { ChatComponent } from "./chat/ChatComponent"
 import { useAuthContext } from "./hooks/useAuthContext"
 import { AUTH_ACTION } from "./context/actions"
+import { SearchBar } from "./components/SearchBar"
 
 function App() {
   const { userId, username, token, dispatch } = useAuthContext()
@@ -40,7 +41,12 @@ function App() {
     <div>
       <button onClick={handleLogin}>Google Login</button>
       <button onClick={handleLogout}>Logout</button>
-      {username && <p>Current username: {username}</p>}
+      {username && (
+        <div>
+          <p>Current username: {username}</p>{" "}
+          <SearchBar placeholder="Username..." />
+        </div>
+      )}
       {token && (
         <ChatComponent
           clientData={{
