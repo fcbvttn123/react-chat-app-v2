@@ -7,7 +7,6 @@ const serverClient = StreamChat.getInstance(
 async function postLogin(req, res) {
   const { username, firstTimeLogIn } = req.body
   try {
-    const token = serverClient.createToken(username)
     if (firstTimeLogIn) {
       await serverClient.upsertUsers([
         {
@@ -17,6 +16,7 @@ async function postLogin(req, res) {
         },
       ])
     }
+    const token = serverClient.createToken(username)
     res.json({ id: username, username, token })
   } catch (err) {
     console.error(err)
