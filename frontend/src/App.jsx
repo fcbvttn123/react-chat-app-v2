@@ -4,16 +4,23 @@ import {
   docExists,
   getUsernameFromEmail,
   postAPICall,
+  connectUserToStream,
+  createDirectChannel,
 } from "./utils/utils"
 import { ChatComponent } from "./chat/ChatComponent"
 import { useAuthContext } from "./hooks/useAuthContext"
 import { AUTH_ACTION } from "./context/actions"
 import { SearchBar } from "./components/SearchBar"
 import { useState } from "react"
+import { StreamChat } from "stream-chat"
+
+const STREAM_CHAT_CLIENT = new StreamChat(import.meta.env.VITE_STREAM_API_KEY)
 
 function App() {
   const { userId, username, token, dispatch } = useAuthContext()
   const [searchResult, setSearchResult] = useState(null)
+  searchResult &&
+    searchUsernameForChannel(searchResult, setSearchResult, username, token)
   async function handleLogin() {
     // Get json data from Google Login
     let json = await handleGoogleLogin()
@@ -44,7 +51,7 @@ function App() {
       <button onClick={handleLogin}>Google Login</button>
       <button onClick={handleLogout}>Logout</button>
       {username && (
-        <div>
+        <div style={{ marginBottom: 20 }}>
           <p>Current username: {username}</p>
           <SearchBar
             placeholder="Username..."
@@ -101,6 +108,45 @@ async function handleGoogleLogin() {
   } catch (err) {
     console.log(err)
   }
+}
+
+async function searchUsernameForChannel(
+  searchedUsername,
+  setSearchResult,
+  ownerUsername,
+  ownerToken
+) {
+  // Check if username in the db
+  let usernameExists = await docExists(
+    import.meta.env.VITE_USER_TABLE,
+    searchedUsername
+  )
+  console.log(usernameExists)
+  // If true, create new channel
+  if (usernameExists) {
+    let connectCurrentUser = await STREAM_CHAT_CLIENT.connectUser(
+      {
+        id: ownerUsername,
+      },
+      ownerToken
+    )
+    // let connectCurrentUser = await connectUserToStream(
+    //   ownerToken,
+    //   {
+    //     id: ownerUsername,
+    //   },
+    //   STREAM_CHAT_CLIENT
+    // )
+    console.log(connectCurrentUser)
+    let channel = await createDirectChannel(
+      ownerUsername,
+      searchedUsername,
+      STREAM_CHAT_CLIENT
+    )
+    console.log(channel)
+  }
+  // Reset Search Bar
+  setSearchResult(null)
 }
 
 export default App

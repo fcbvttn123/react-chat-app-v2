@@ -1,10 +1,2 @@
 Continue:
-    + Continue with Auth Context
-
-
-
-
-Current commit
-    + Remove unnecessary code
-    + Add Logout feature
-    + Show current username
+    + Clean Code

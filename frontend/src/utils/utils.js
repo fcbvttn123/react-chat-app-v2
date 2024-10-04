@@ -1,6 +1,5 @@
 import { doc, getDoc, setDoc } from "firebase/firestore"
 import { db } from "../config/firebase"
-import { StreamChat } from "stream-chat"
 
 export function getUsernameFromEmail(email) {
   if (email && typeof email === "string") {
@@ -40,12 +39,31 @@ export async function postAPICall(path, jsonData) {
   return json
 }
 
-export async function connectUserToStream(token, userData) {
+export async function connectUserToStream(token, userData, streamChatClient) {
+  // try {
+  //   await streamChatClient.connectUser(userData, token)
+  //   return true
+  // } catch (err) {
+  //   console.error(err)
+  //   return false
+  // }
+}
+
+export async function createDirectChannel(
+  currentUserID,
+  otherUserID,
+  streamChatClient
+) {
   try {
-    const client = new StreamChat(import.meta.env.VITE_STREAM_API_KEY)
-    await client.connectUser(userData, token)
-    return true
+    // Create a new or existing "messaging" channel between the two users
+    const channel = streamChatClient.channel("messaging", {
+      members: [currentUserID, otherUserID],
+    })
+    // Create or fetch the channel from the Stream API
+    await channel.create()
+    console.log(`Channel created between ${currentUserID} and ${otherUserID}`)
+    return channel
   } catch (err) {
-    return false
+    console.error("Error creating channel:", err)
   }
 }
