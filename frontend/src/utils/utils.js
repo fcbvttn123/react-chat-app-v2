@@ -40,13 +40,13 @@ export async function postAPICall(path, jsonData) {
 }
 
 export async function connectUserToStream(token, userData, streamChatClient) {
-  // try {
-  //   await streamChatClient.connectUser(userData, token)
-  //   return true
-  // } catch (err) {
-  //   console.error(err)
-  //   return false
-  // }
+  try {
+    await streamChatClient?.connectUser(userData, token)
+    return true
+  } catch (err) {
+    console.error(err)
+    return false
+  }
 }
 
 export async function createDirectChannel(

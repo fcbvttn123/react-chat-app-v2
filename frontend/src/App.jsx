@@ -124,19 +124,13 @@ async function searchUsernameForChannel(
   console.log(usernameExists)
   // If true, create new channel
   if (usernameExists) {
-    let connectCurrentUser = await STREAM_CHAT_CLIENT.connectUser(
+    let connectCurrentUser = await connectUserToStream(
+      ownerToken,
       {
         id: ownerUsername,
       },
-      ownerToken
+      STREAM_CHAT_CLIENT
     )
-    // let connectCurrentUser = await connectUserToStream(
-    //   ownerToken,
-    //   {
-    //     id: ownerUsername,
-    //   },
-    //   STREAM_CHAT_CLIENT
-    // )
     console.log(connectCurrentUser)
     let channel = await createDirectChannel(
       ownerUsername,
