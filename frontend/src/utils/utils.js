@@ -42,6 +42,7 @@ export async function postAPICall(path, jsonData) {
 export async function connectUserToStream(token, userData, streamChatClient) {
   try {
     await streamChatClient?.connectUser(userData, token)
+    console.log("User connected to Stream")
     return true
   } catch (err) {
     console.error(err)

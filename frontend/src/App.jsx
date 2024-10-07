@@ -12,7 +12,6 @@ import { useAuthContext } from "./hooks/useAuthContext"
 import { AUTH_ACTION } from "./context/actions"
 import { SearchBar } from "./components/SearchBar"
 import { useState } from "react"
-import { StreamChat } from "stream-chat"
 import { useStreamChatContext } from "./hooks/useStreamChatContext"
 
 function App() {
@@ -20,7 +19,24 @@ function App() {
   const { userId, username, token, dispatch } = useAuthContext()
   const [searchResult, setSearchResult] = useState(null)
   if (searchResult) {
-    searchUsernameForChannel(searchResult, username, token, streamChatClient)
+    // Check if username is in the db
+    let usernameExists = docExists(
+      import.meta.env.VITE_USER_TABLE,
+      searchResult
+    ).then((res) => res)
+    // If username is in the db, connect user to Stream and create/get chat channel
+    usernameExists &&
+      connectUserToStream(
+        token,
+        {
+          id: username,
+        },
+        streamChatClient
+      ).then(
+        (res) =>
+          res && createDirectChannel(username, searchResult, streamChatClient)
+      )
+    // Reset Search Bar
     setSearchResult(null)
   }
   async function handleLogin() {
@@ -109,37 +125,6 @@ async function handleGoogleLogin() {
     }
   } catch (err) {
     console.log(err)
-  }
-}
-
-async function searchUsernameForChannel(
-  searchedUsername,
-  ownerUsername,
-  ownerToken,
-  streamChatClient
-) {
-  // Check if username in the db
-  let usernameExists = await docExists(
-    import.meta.env.VITE_USER_TABLE,
-    searchedUsername
-  )
-  console.log(usernameExists)
-  // If true, create new channel
-  if (usernameExists) {
-    let connectCurrentUser = await connectUserToStream(
-      ownerToken,
-      {
-        id: ownerUsername,
-      },
-      streamChatClient
-    )
-    console.log(connectCurrentUser)
-    let channel = await createDirectChannel(
-      ownerUsername,
-      searchedUsername,
-      streamChatClient
-    )
-    console.log(channel)
   }
 }
 
