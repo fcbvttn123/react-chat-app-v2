@@ -13,14 +13,16 @@ import { AUTH_ACTION } from "./context/actions"
 import { SearchBar } from "./components/SearchBar"
 import { useState } from "react"
 import { StreamChat } from "stream-chat"
-
-const STREAM_CHAT_CLIENT = new StreamChat(import.meta.env.VITE_STREAM_API_KEY)
+import { useStreamChatContext } from "./hooks/useStreamChatContext"
 
 function App() {
+  const { streamChatClient } = useStreamChatContext()
   const { userId, username, token, dispatch } = useAuthContext()
   const [searchResult, setSearchResult] = useState(null)
-  searchResult &&
-    searchUsernameForChannel(searchResult, setSearchResult, username, token)
+  if (searchResult) {
+    searchUsernameForChannel(searchResult, username, token, streamChatClient)
+    setSearchResult(null)
+  }
   async function handleLogin() {
     // Get json data from Google Login
     let json = await handleGoogleLogin()
@@ -112,9 +114,9 @@ async function handleGoogleLogin() {
 
 async function searchUsernameForChannel(
   searchedUsername,
-  setSearchResult,
   ownerUsername,
-  ownerToken
+  ownerToken,
+  streamChatClient
 ) {
   // Check if username in the db
   let usernameExists = await docExists(
@@ -129,18 +131,16 @@ async function searchUsernameForChannel(
       {
         id: ownerUsername,
       },
-      STREAM_CHAT_CLIENT
+      streamChatClient
     )
     console.log(connectCurrentUser)
     let channel = await createDirectChannel(
       ownerUsername,
       searchedUsername,
-      STREAM_CHAT_CLIENT
+      streamChatClient
     )
     console.log(channel)
   }
-  // Reset Search Bar
-  setSearchResult(null)
 }
 
 export default App

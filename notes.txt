@@ -1,2 +1,2 @@
 Continue:
-    + Clean Code
+    + Implement global context - Stream Chat Client 
