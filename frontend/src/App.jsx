@@ -16,6 +16,7 @@ import { useStreamChatContext } from "./hooks/useStreamChatContext"
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom"
 import { Login } from "./pages/Login"
 import { ChatPage } from "./pages/ChatPage"
+import AuthRequired from "./components/AuthRequired"
 
 function App() {
   const { streamChatClient } = useStreamChatContext()
@@ -93,7 +94,9 @@ function App() {
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={<ChatPage />} />
+        <Route element={<AuthRequired />}>
+          <Route path="/" element={<ChatPage />} />
+        </Route>
       </Routes>
     </Router>
   )
