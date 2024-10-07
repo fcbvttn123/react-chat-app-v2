@@ -13,6 +13,9 @@ import { AUTH_ACTION } from "./context/actions"
 import { SearchBar } from "./components/SearchBar"
 import { useState } from "react"
 import { useStreamChatContext } from "./hooks/useStreamChatContext"
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom"
+import { Login } from "./pages/Login"
+import { ChatPage } from "./pages/ChatPage"
 
 function App() {
   const { streamChatClient } = useStreamChatContext()
@@ -65,28 +68,34 @@ function App() {
     dispatch({ type: AUTH_ACTION.LOGOUT })
   }
   return (
-    <div>
-      <button onClick={handleLogin}>Google Login</button>
-      <button onClick={handleLogout}>Logout</button>
-      {username && (
-        <div style={{ marginBottom: 20 }}>
-          <p>Current username: {username}</p>
-          <SearchBar
-            placeholder="Username..."
-            setSearchResult={setSearchResult}
-          />
-        </div>
-      )}
-      {token && (
-        <ChatComponent
-          clientData={{
-            apiKey: import.meta.env.VITE_STREAM_API_KEY,
-            tokenOrProvider: token,
-            userData: { id: userId },
-          }}
-        />
-      )}
-    </div>
+    // <div>
+    //   <button onClick={handleLogin}>Google Login</button>
+    //   <button onClick={handleLogout}>Logout</button>
+    //   {username && (
+    //     <div style={{ marginBottom: 20 }}>
+    //       <p>Current username: {username}</p>
+    //       <SearchBar
+    //         placeholder="Username..."
+    //         setSearchResult={setSearchResult}
+    //       />
+    //     </div>
+    //   )}
+    //   {token && (
+    //     <ChatComponent
+    //       clientData={{
+    //         apiKey: import.meta.env.VITE_STREAM_API_KEY,
+    //         tokenOrProvider: token,
+    //         userData: { id: userId },
+    //       }}
+    //     />
+    //   )}
+    // </div>
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<ChatPage />} />
+      </Routes>
+    </Router>
   )
 }
 

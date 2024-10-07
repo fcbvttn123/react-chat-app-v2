@@ -1,2 +1,2 @@
 Continue:
-    + Implement global context - Stream Chat Client 
+    + Working on UI (React Router)
