@@ -6,11 +6,9 @@ import { AuthContextProvider } from "./context/AuthContext.jsx"
 import { StreamChatContextProvider } from "./context/StreamChatContext.jsx"
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <StreamChatContextProvider>
-      <AuthContextProvider>
-        <App />
-      </AuthContextProvider>
-    </StreamChatContextProvider>
-  </StrictMode>
+  <StreamChatContextProvider>
+    <AuthContextProvider>
+      <App />
+    </AuthContextProvider>
+  </StreamChatContextProvider>
 )
