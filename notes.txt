@@ -1,2 +1,2 @@
 Continue:
-    + Working on UI (React Router)
+    + Continue at AuthRequired.jsx file
