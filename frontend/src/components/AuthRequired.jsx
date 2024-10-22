@@ -8,10 +8,12 @@ export default function AuthRequired() {
   const { streamChatClient } = useStreamChatContext()
   const { token, username } = useAuthContext()
   const [authenticated, setAuthenticated] = useState(false)
+  const [loading, setLoading] = useState(true)
+  setTimeout(() => {
+    setLoading(false)
+  }, 3000)
   useEffect(() => {
-    // Why is it printed null?
-    console.log(token)
-    token &&
+    if (token) {
       connectUserToStream(
         token,
         {
@@ -20,8 +22,17 @@ export default function AuthRequired() {
         streamChatClient
       ).then((res) => {
         res && setAuthenticated(true)
+        setLoading(false)
       })
+    }
   }, [token])
+  if (loading) {
+    return (
+      <div>
+        <p>Loading...</p>
+      </div>
+    )
+  }
   if (!authenticated) {
     return <Navigate to="/login" />
   }
