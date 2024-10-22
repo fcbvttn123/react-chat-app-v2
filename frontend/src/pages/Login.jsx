@@ -6,16 +6,22 @@ import {
   getUsernameFromEmail,
   postAPICall,
 } from "../utils/utils"
+import { useAuthContext } from "../hooks/useAuthContext"
+import { useNavigate } from "react-router-dom"
 
 export function Login() {
+  const { dispatch } = useAuthContext()
+  const navigate = useNavigate()
   return (
     <div>
-      <button onClick={handleLogin}>Google Login</button>
+      <button onClick={() => handleLogin(dispatch, navigate)}>
+        Google Login
+      </button>
     </div>
   )
 }
 
-async function handleLogin() {
+async function handleLogin(dispatch, navigate) {
   // Get json data from Google Login
   let json = await handleGoogleLogin()
   // Save json data into localStorage
@@ -36,6 +42,8 @@ async function handleLogin() {
       userId: json.userId,
     },
   })
+  // Navigate to Chat Page if authentication is successfull
+  navigate("/")
 }
 
 async function handleGoogleLogin() {

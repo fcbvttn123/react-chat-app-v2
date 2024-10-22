@@ -102,42 +102,42 @@ function App() {
   )
 }
 
-async function handleGoogleLogin() {
-  try {
-    // Start google login
-    let { user } = await startGoogleLogin()
-    // Get data after google login
-    let { email, displayName, photoURL } = user
-    let username = getUsernameFromEmail(email)
-    // Check if username already exists in the firestore db
-    let usernameExists = await docExists(
-      import.meta.env.VITE_USER_TABLE,
-      username
-    )
-    // If username is already in the firestore db,
-    let json
-    if (usernameExists) {
-      json = await postAPICall("/api/auth/login", {
-        username,
-        firstTimeLogIn: false,
-      })
-    }
-    // else, add username to firestore and upsert it to Stream in backend
-    else {
-      await createDoc(import.meta.env.VITE_USER_TABLE, username, { username })
-      json = await postAPICall("/api/auth/login", {
-        username,
-        firstTimeLogIn: true,
-      })
-    }
-    return {
-      token: json.token,
-      userId: json.id,
-      username: json.username,
-    }
-  } catch (err) {
-    console.log(err)
-  }
-}
+// async function handleGoogleLogin() {
+//   try {
+//     // Start google login
+//     let { user } = await startGoogleLogin()
+//     // Get data after google login
+//     let { email, displayName, photoURL } = user
+//     let username = getUsernameFromEmail(email)
+//     // Check if username already exists in the firestore db
+//     let usernameExists = await docExists(
+//       import.meta.env.VITE_USER_TABLE,
+//       username
+//     )
+//     // If username is already in the firestore db,
+//     let json
+//     if (usernameExists) {
+//       json = await postAPICall("/api/auth/login", {
+//         username,
+//         firstTimeLogIn: false,
+//       })
+//     }
+//     // else, add username to firestore and upsert it to Stream in backend
+//     else {
+//       await createDoc(import.meta.env.VITE_USER_TABLE, username, { username })
+//       json = await postAPICall("/api/auth/login", {
+//         username,
+//         firstTimeLogIn: true,
+//       })
+//     }
+//     return {
+//       token: json.token,
+//       userId: json.id,
+//       username: json.username,
+//     }
+//   } catch (err) {
+//     console.log(err)
+//   }
+// }
 
 export default App
