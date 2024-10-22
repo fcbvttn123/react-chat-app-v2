@@ -21,29 +21,31 @@ export function Login() {
   )
 }
 
-async function handleLogin(dispatch, navigate) {
+async function handleLogin(updateAuthContext, navigate) {
   // Get json data from Google Login
   let json = await handleGoogleLogin()
-  // Save json data into localStorage
-  localStorage.setItem(
-    import.meta.env.VITE_STREAM_LOCAL_STORAGE_KEY_AUTH,
-    JSON.stringify({
-      userId: json.userId,
-      username: json.username,
-      token: json.token,
+  if (json) {
+    // Save json data into localStorage
+    localStorage.setItem(
+      import.meta.env.VITE_STREAM_LOCAL_STORAGE_KEY_AUTH,
+      JSON.stringify({
+        userId: json.userId,
+        username: json.username,
+        token: json.token,
+      })
+    )
+    // Set user data to global state (auth)
+    updateAuthContext({
+      type: AUTH_ACTION.LOGIN,
+      payload: {
+        username: json.username,
+        token: json.token,
+        userId: json.userId,
+      },
     })
-  )
-  // Set user data to global state (auth)
-  dispatch({
-    type: AUTH_ACTION.LOGIN,
-    payload: {
-      username: json.username,
-      token: json.token,
-      userId: json.userId,
-    },
-  })
-  // Navigate to Chat Page if authentication is successfull
-  navigate("/")
+    // Navigate to Chat Page if authentication is successfull
+    navigate("/")
+  }
 }
 
 async function handleGoogleLogin() {
