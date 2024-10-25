@@ -1,2 +1,3 @@
 Continue:
-    + Continue at AuthRequired.jsx file
+    + Move code of Chat feature from App.jsx to ChatPage.jsx 
+    + Fix the bug in AuthRequired.jsx
