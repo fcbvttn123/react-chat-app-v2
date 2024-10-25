@@ -4,11 +4,18 @@ import { SearchBar } from "../components/SearchBar"
 import { useAuthContext } from "../hooks/useAuthContext"
 import { AUTH_ACTION } from "../context/actions"
 import { useNavigate } from "react-router-dom"
+import {
+  connectUserToStream,
+  createDirectChannel,
+  docExists,
+} from "../utils/utils"
+import { useStreamChatContext } from "../hooks/useStreamChatContext"
 
 export function ChatPage() {
   const [searchResult, setSearchResult] = useState(null)
   const navigate = useNavigate()
   const { userId, username, token, dispatch } = useAuthContext()
+  const { streamChatClient } = useStreamChatContext()
   if (searchResult) {
     // Check if username is in the db
     let usernameExists = docExists(
